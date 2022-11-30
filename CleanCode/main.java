@@ -5,7 +5,8 @@ public class main {
         final long startTime = System.currentTimeMillis();
         final long beforeUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
-        Graph graph = new Graph("DataSets/germany.fmi");
+        String pathName = "";
+        Graph.createGraph(pathName);
 
         final long endTime = System.currentTimeMillis();
         long afterUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();

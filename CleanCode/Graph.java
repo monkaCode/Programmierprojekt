@@ -8,12 +8,12 @@ public class Graph {
     static double[][] nodesLatLon;
     static int[] edgeOffset;
     static int[][] edgeData;
-    private int numberOfNodes;
-    private int numberOfEdges;
+    private static int numberOfNodes;
+    private static int numberOfEdges;
 
-    private BufferedReader fileReader;
+    private static BufferedReader fileReader;
 
-    public void createGraph(String pathName) throws Exception {
+    public static void createGraph(String pathName) throws Exception {
         fileReader = new BufferedReader(new FileReader(pathName));
         skip();
 
@@ -36,13 +36,13 @@ public class Graph {
      * 
      * @throws Exception
      */
-    private void skip() throws Exception {
+    private static void skip() throws Exception {
         for (int i = 0; i < 5; i++) {
             fileReader.readLine();
         }
     }
-    
-    private double[][] getNodesLatLon() throws Exception {
+
+    private static double[][] getNodesLatLon() throws Exception {
         double[][] result = new double[2][numberOfNodes];
 
         for (int i = 0; i < numberOfNodes; i++) {
@@ -58,8 +58,8 @@ public class Graph {
         }
         return result;
     }
-    
-    private void fillEdgeArrays() throws Exception {
+
+    private static void fillEdgeArrays() throws Exception {
         for (int i = 0; i < numberOfEdges; i++) {
             String line = fileReader.readLine();
             String[] values = line.split(" ");
@@ -93,6 +93,5 @@ public class Graph {
 
         }
     }
-
 
 }
