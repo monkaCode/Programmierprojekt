@@ -11,9 +11,9 @@ public class Graph {
     private int numberOfNodes;
     private int numberOfEdges;
 
-    private final BufferedReader fileReader;
+    private BufferedReader fileReader;
 
-    public Graph(String pathName) throws Exception {
+    public void createGraph(String pathName) throws Exception {
         fileReader = new BufferedReader(new FileReader(pathName));
         skip();
 
@@ -41,7 +41,24 @@ public class Graph {
             fileReader.readLine();
         }
     }
+    
+    private double[][] getNodesLatLon() throws Exception {
+        double[][] result = new double[2][numberOfNodes];
 
+        for (int i = 0; i < numberOfNodes; i++) {
+            String line = fileReader.readLine();
+            String[] spiltLineNodes = line.split(" ");
+
+            int nodeID = Integer.valueOf(spiltLineNodes[0]);
+            double latitude = Double.valueOf(spiltLineNodes[2]);
+            double longitude = Double.valueOf(spiltLineNodes[3]);
+
+            result[0][nodeID] = latitude;
+            result[1][nodeID] = longitude;
+        }
+        return result;
+    }
+    
     private void fillEdgeArrays() throws Exception {
         for (int i = 0; i < numberOfEdges; i++) {
             String line = fileReader.readLine();
@@ -77,21 +94,5 @@ public class Graph {
         }
     }
 
-    private double[][] getNodesLatLon() throws Exception {
-        double[][] result = new double[2][numberOfNodes];
-
-        for (int i = 0; i < numberOfNodes; i++) {
-            String line = fileReader.readLine();
-            String[] spiltLineNodes = line.split(" ");
-
-            int nodeID = Integer.valueOf(spiltLineNodes[0]);
-            double latitude = Double.valueOf(spiltLineNodes[2]);
-            double longitude = Double.valueOf(spiltLineNodes[3]);
-
-            result[0][nodeID] = latitude;
-            result[1][nodeID] = longitude;
-        }
-        return result;
-    }
 
 }
