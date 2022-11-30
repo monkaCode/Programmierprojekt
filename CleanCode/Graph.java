@@ -8,7 +8,7 @@ public class Graph {
     static double[][] nodesLatLon;
     static int[] edgeOffset;
     static int[][] edgeData;
-    private static int numberOfNodes;
+    static int numberOfNodes;
     private static int numberOfEdges;
 
     private static BufferedReader fileReader;

@@ -5,8 +5,13 @@ public class main {
         final long startTime = System.currentTimeMillis();
         final long beforeUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
-        String pathName = "";
-        Graph.createGraph(pathName);
+        String pathName = "DataSets/stuttgart.fmi";
+        Graph graph = new Graph();
+        graph.createGraph(pathName);
+        System.out.println("input data finished");
+
+        BinarySearch bs = new BinarySearch(graph);
+        bs.sort();
 
         final long endTime = System.currentTimeMillis();
         long afterUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
