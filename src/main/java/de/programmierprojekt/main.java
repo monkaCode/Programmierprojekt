@@ -12,7 +12,7 @@ public class main {
         System.out.println("Reading complete, starting data structure");
         graph.prepareBinarySearch();
 
-        System.out.println(graph.findClosestNode(49.014d, 10.015d));
+        System.out.println(graph.findClosestNode(49.045d, 10.045d));
         
 
         final long endTime = System.currentTimeMillis();

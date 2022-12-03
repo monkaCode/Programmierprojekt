@@ -198,7 +198,7 @@ public class Graph {
                 latitude, longitude);
         
         int x = 1;
-        while(nodesLatCCNIndex-x >= 0 && nodesLatCCNIndex+x < nodesLatIndex.length) { // && latitude - nodesLat[nodesLatCCNIndex-x] > maxDistance
+        while((nodesLatCCNIndex-x >= 0 && nodesLatCCNIndex+x < nodesLatIndex.length) && (latitude - nodesLat[nodesLatCCNIndex-x] > maxDistance || nodesLat[nodesLatCCNIndex+x] - latitude > maxDistance)) {
             double currentLeftDistance = Arithmetic.calcEuclideanDistance(latitude, longitude, getLatitude(nodesLatIndex[nodesLatCCNIndex-x]), getLongitude(nodesLatIndex[nodesLatCCNIndex-x]));
             double currentRightDistance = Arithmetic.calcEuclideanDistance(latitude, longitude, getLatitude(nodesLatIndex[nodesLatCCNIndex+x]), getLongitude(nodesLatIndex[nodesLatCCNIndex+x]));
             System.out.println("maxDistance: " + maxDistance);
