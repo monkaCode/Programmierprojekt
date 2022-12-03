@@ -159,65 +159,71 @@ public class Graph {
     /**
      * 
      * @return nodeID of the nearest node in same latitude
-     * @throws Exception
      */
-    public static Pair<Integer, Integer> binarySearch(double latitude, int lowerBound, int upperBound)
-            throws Exception {
-        System.out.println("upper: " + upperBound + " lower: " + lowerBound);
+    public static Pair<Integer, Integer> binarySearch(double latitude, int lowerBound, int upperBound) {
 
         if (upperBound == lowerBound) {
-            double distanceLeft = Math.abs(latitude - nodesLat[upperBound - 1]);
-            double distanceMid = Math.abs(latitude - nodesLat[upperBound]);
-            double distanceRight = Math.abs(latitude - nodesLat[upperBound + 1]);
-
-            int currentMinIndex = 0;
-
-            if (distanceLeft < distanceMid) {
-                currentMinIndex = upperBound - 1;
-                if (distanceLeft >= distanceRight) {
-                    currentMinIndex = upperBound + 1;
-                }
-            } else {
-                currentMinIndex = upperBound;
-                if (distanceMid >= distanceRight) {
-                    currentMinIndex = upperBound + 1;
-                }
-            }
-
-            return new Pair<Integer, Integer>(nodesLatIndex[currentMinIndex], currentMinIndex);
+            return new Pair<Integer, Integer>(nodesLatIndex[upperBound], upperBound);
         }
 
-        // if (upperBound < lowerBound) {
-        // double distanceUpper = Math.abs(latitude - nodesLat[upperBound]);
-        // double distanceLower = Math.abs(latitude - nodesLat[lowerBound]);
-
-        // return distanceLower > distanceUpper ? upperBound : lowerBound;
-        // }
+        if(upperBound - lowerBound <= 1) {
+            double distanceUpper = (double)Math.round((nodesLat[upperBound] - latitude) * 100000000d) / 100000000d;
+            double distanceLower = (double)Math.round((latitude - nodesLat[lowerBound]) * 100000000d) / 100000000d;
+            if(distanceUpper >= distanceLower) {
+                return new Pair<Integer, Integer>(nodesLatIndex[lowerBound], lowerBound);
+            } else {
+                return new Pair<Integer, Integer>(nodesLatIndex[upperBound], upperBound);
+            }
+        }
 
         int median = (upperBound + lowerBound) / 2;
-        // System.out.println("latitude: " + latitude + "median: " + median + " val: " +
-        // nodesLat[median]);
-        Thread.sleep(100);
 
         if (latitude == nodesLat[median]) {
             // exakt der knoten mit dem selben Breitengrad
             return new Pair<Integer, Integer>(nodesLatIndex[median], median);
         } else if (latitude > nodesLat[median]) {
-            return binarySearch(latitude, median + 1, upperBound);
+            return binarySearch(latitude, median, upperBound);
         } else {
-            return binarySearch(latitude, lowerBound, median - 1);
+            return binarySearch(latitude, lowerBound, median);
         }
     }
 
-    public static int findClosestNode(double latitude, double longitude) throws Exception {
-        int currentClosestNode = binarySearch(latitude, 0, nodesLat.length - 1).getValue0();
+    public static int findClosestNode(double latitude, double longitude) {
+        Pair<Integer, Integer> binarySearchResult = binarySearch(latitude, 0, nodesLat.length - 1);
+        int currentClosestNode = binarySearchResult.getValue0();
+        int nodesLatCCNIndex = binarySearchResult.getValue1();
 
-        double currentDistance = Arithmetic.calcEuclideanDistance(
-                nodesLatLon[1][currentClosestNode], nodesLatLon[2][currentClosestNode],
+        double maxDistance = Arithmetic.calcEuclideanDistance(
+                nodesLatLon[0][currentClosestNode], nodesLatLon[1][currentClosestNode],
                 latitude, longitude);
+        
+        int x = 1;
+        while(nodesLatCCNIndex-x >= 0 && nodesLatCCNIndex+x < nodesLatIndex.length) { // && latitude - nodesLat[nodesLatCCNIndex-x] > maxDistance
+            double currentLeftDistance = Arithmetic.calcEuclideanDistance(latitude, longitude, getLatitude(nodesLatIndex[nodesLatCCNIndex-x]), getLongitude(nodesLatIndex[nodesLatCCNIndex-x]));
+            double currentRightDistance = Arithmetic.calcEuclideanDistance(latitude, longitude, getLatitude(nodesLatIndex[nodesLatCCNIndex+x]), getLongitude(nodesLatIndex[nodesLatCCNIndex+x]));
+            System.out.println("maxDistance: " + maxDistance);
+            System.out.println("currentLeftDistance: " + currentLeftDistance);
+            System.out.println("currentRightDistance: " + currentRightDistance);
+            if(currentLeftDistance < maxDistance) {
+                maxDistance = currentLeftDistance;
+                currentClosestNode = nodesLatIndex[nodesLatCCNIndex-x];
+            } else if(currentRightDistance < maxDistance) {
+                maxDistance = currentRightDistance;
+                currentClosestNode = nodesLatIndex[nodesLatCCNIndex+x];
+            }
+            x++;
+        }
 
-        return 0;
+        return currentClosestNode;
 
+    }
+
+    private static double getLatitude(int nodeID) {
+        return nodesLatLon[0][nodeID];
+    }
+
+    private static double getLongitude(int nodeID) {
+        return nodesLatLon[1][nodeID];
     }
 
 }
