@@ -201,9 +201,7 @@ public class Graph {
         while((nodesLatCCNIndex-x >= 0 && nodesLatCCNIndex+x < nodesLatIndex.length) && (latitude - nodesLat[nodesLatCCNIndex-x] > maxDistance || nodesLat[nodesLatCCNIndex+x] - latitude > maxDistance)) {
             double currentLeftDistance = Arithmetic.calcEuclideanDistance(latitude, longitude, getLatitude(nodesLatIndex[nodesLatCCNIndex-x]), getLongitude(nodesLatIndex[nodesLatCCNIndex-x]));
             double currentRightDistance = Arithmetic.calcEuclideanDistance(latitude, longitude, getLatitude(nodesLatIndex[nodesLatCCNIndex+x]), getLongitude(nodesLatIndex[nodesLatCCNIndex+x]));
-            System.out.println("maxDistance: " + maxDistance);
-            System.out.println("currentLeftDistance: " + currentLeftDistance);
-            System.out.println("currentRightDistance: " + currentRightDistance);
+            
             if(currentLeftDistance < maxDistance) {
                 maxDistance = currentLeftDistance;
                 currentClosestNode = nodesLatIndex[nodesLatCCNIndex-x];
