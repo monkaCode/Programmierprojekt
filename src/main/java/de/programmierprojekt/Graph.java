@@ -280,11 +280,11 @@ public class Graph {
         return currentNodeIndex;
     }
 
-    private static double getLatitude(int nodeID) {
+    public static double getLatitude(int nodeID) {
         return nodesLatLon[0][nodeID];
     }
 
-    private static double getLongitude(int nodeID) {
+    public static double getLongitude(int nodeID) {
         return nodesLatLon[1][nodeID];
     }
 
