@@ -187,7 +187,7 @@ public class Graph {
      *         searched latitude value
      *         Right := Position of the Node in nodesLat[]
      */
-    public static Pair<Integer, Integer> binarySearch(double latitude, int lowerBound, int upperBound) {
+    private static Pair<Integer, Integer> binarySearch(double latitude, int lowerBound, int upperBound) {
 
         if (upperBound == lowerBound) {
             return new Pair<Integer, Integer>(nodesLatIndex[upperBound], upperBound);
