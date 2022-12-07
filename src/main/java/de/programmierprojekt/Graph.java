@@ -166,10 +166,10 @@ public class Graph {
             return new Pair<Integer, Integer>(nodesLatIndex[upperBound], upperBound);
         }
 
-        if(upperBound - lowerBound <= 1) {
-            double distanceUpper = (double)Math.round((nodesLat[upperBound] - latitude) * 100000000d) / 100000000d;
-            double distanceLower = (double)Math.round((latitude - nodesLat[lowerBound]) * 100000000d) / 100000000d;
-            if(distanceUpper >= distanceLower) {
+        if (upperBound - lowerBound <= 1) {
+            double distanceUpper = (double) Math.round((nodesLat[upperBound] - latitude) * 100000000d) / 100000000d;
+            double distanceLower = (double) Math.round((latitude - nodesLat[lowerBound]) * 100000000d) / 100000000d;
+            if (distanceUpper >= distanceLower) {
                 return new Pair<Integer, Integer>(nodesLatIndex[lowerBound], lowerBound);
             } else {
                 return new Pair<Integer, Integer>(nodesLatIndex[upperBound], upperBound);
@@ -196,18 +196,24 @@ public class Graph {
         double maxDistance = Arithmetic.calcEuclideanDistance(
                 nodesLatLon[0][currentClosestNode], nodesLatLon[1][currentClosestNode],
                 latitude, longitude);
-        
+
         int x = 1;
-        while((nodesLatCCNIndex-x >= 0 && nodesLatCCNIndex+x < nodesLatIndex.length) && (latitude - nodesLat[nodesLatCCNIndex-x] > maxDistance || nodesLat[nodesLatCCNIndex+x] - latitude > maxDistance)) {
-            double currentLeftDistance = Arithmetic.calcEuclideanDistance(latitude, longitude, getLatitude(nodesLatIndex[nodesLatCCNIndex-x]), getLongitude(nodesLatIndex[nodesLatCCNIndex-x]));
-            double currentRightDistance = Arithmetic.calcEuclideanDistance(latitude, longitude, getLatitude(nodesLatIndex[nodesLatCCNIndex+x]), getLongitude(nodesLatIndex[nodesLatCCNIndex+x]));
-            
-            if(currentLeftDistance < maxDistance) {
+        while ((nodesLatCCNIndex - x >= 0 && nodesLatCCNIndex + x < nodesLatIndex.length) &&
+                (latitude - nodesLat[nodesLatCCNIndex - x] > maxDistance
+                        || nodesLat[nodesLatCCNIndex + x] - latitude > maxDistance)) {
+            double currentLeftDistance = Arithmetic.calcEuclideanDistance(latitude, longitude,
+                    getLatitude(nodesLatIndex[nodesLatCCNIndex - x]),
+                    getLongitude(nodesLatIndex[nodesLatCCNIndex - x]));
+            double currentRightDistance = Arithmetic.calcEuclideanDistance(latitude, longitude,
+                    getLatitude(nodesLatIndex[nodesLatCCNIndex + x]),
+                    getLongitude(nodesLatIndex[nodesLatCCNIndex + x]));
+
+            if (currentLeftDistance < maxDistance) {
                 maxDistance = currentLeftDistance;
-                currentClosestNode = nodesLatIndex[nodesLatCCNIndex-x];
-            } else if(currentRightDistance < maxDistance) {
+                currentClosestNode = nodesLatIndex[nodesLatCCNIndex - x];
+            } else if (currentRightDistance < maxDistance) {
                 maxDistance = currentRightDistance;
-                currentClosestNode = nodesLatIndex[nodesLatCCNIndex+x];
+                currentClosestNode = nodesLatIndex[nodesLatCCNIndex + x];
             }
             x++;
         }
