@@ -185,7 +185,7 @@ public class Graph {
      * @return Pair<Left, Right>:
      *         Left := NodeID of the Node which latitude value is the closest to the
      *         searched latitude value
-     *         Right := Position of the Node in nodesLat[]
+     *         Right := Index of the Node in nodesLat[]
      */
     private static Pair<Integer, Integer> binarySearch(double latitude, int lowerBound, int upperBound) {
 
@@ -238,16 +238,19 @@ public class Graph {
          */
         for (int i = 1; nodeSortedLatIndex - i >= 0; i++) {
             int leftIndex = nodeSortedLatIndex - i;
-            double currentLeftDistance = Arithmetic.calcEuclideanDistance(latitude, longitude,
-                    getLatitude(nodesLatIndex[leftIndex]), getLongitude(nodesLatIndex[leftIndex]));
 
             /**
-             * if currentLeftDistance has already a higher value
-             * than maxDistance there is no need to check further
+             * if the distance between the latitude of the given coordinate
+             * and the latitude of the current searched node is higher than maxDistance
+             * then there is no need to look further
              */
-            if (currentLeftDistance > maxDistance) {
+
+            if (latitude - nodesLat[leftIndex] > maxDistance) {
                 break;
             }
+
+            double currentLeftDistance = Arithmetic.calcEuclideanDistance(latitude, longitude,
+                    getLatitude(nodesLatIndex[leftIndex]), getLongitude(nodesLatIndex[leftIndex]));
 
             if (currentLeftDistance < maxDistance) {
                 maxDistance = currentLeftDistance;
@@ -261,16 +264,19 @@ public class Graph {
          */
         for (int i = 1; nodeSortedLatIndex + i < nodesLatIndex.length; i++) {
             int rightIndex = nodeSortedLatIndex + i;
-            double currentRightDistance = Arithmetic.calcEuclideanDistance(latitude, longitude,
-                    getLatitude(nodesLatIndex[rightIndex]), getLongitude(nodesLatIndex[rightIndex]));
 
             /**
-             * if currentRightDistance has already a higher value
-             * than maxDistance there is no need to check further
+             * if the distance between the latitude of the given coordinate
+             * and the latitude of the current searched node is higher than maxDistance
+             * then there is no need to look further
              */
-            if (currentRightDistance > maxDistance) {
+
+            if (nodesLat[rightIndex] - latitude > maxDistance) {
                 break;
             }
+
+            double currentRightDistance = Arithmetic.calcEuclideanDistance(latitude, longitude,
+                    getLatitude(nodesLatIndex[rightIndex]), getLongitude(nodesLatIndex[rightIndex]));
 
             if (currentRightDistance < maxDistance) {
                 maxDistance = currentRightDistance;

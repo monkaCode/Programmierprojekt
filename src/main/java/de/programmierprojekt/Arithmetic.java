@@ -3,11 +3,11 @@ package de.programmierprojekt;
 public class Arithmetic {
 
     /**
-     * @param latitude1  of Node X
-     * @param longitude1 of Node X
-     * @param latitude2  of Node Y
-     * @param longitude2 of Node Y
-     * @return Distance between Node X and Y
+     * @param latitude1  of Node 1
+     * @param longitude1 of Node 1
+     * @param latitude2  of Node 2
+     * @param longitude2 of Node 2
+     * @return Distance between Node 1 and 2
      */
     public static double calcEuclideanDistance(double latitude1, double longitude1, double latitude2,
             double longitude2) {
