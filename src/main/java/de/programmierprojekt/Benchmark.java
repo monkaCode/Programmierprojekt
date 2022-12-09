@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Scanner;
 
+import org.javatuples.Pair;
+
 public class Benchmark {
 
 	public static void main(String[] args) throws Exception {
@@ -26,12 +28,15 @@ public class Benchmark {
 		System.out.println("Setting up closest node data structure...");
 
 		Graph.prepareBinarySearch();
-
+		// find temporary closest node with binarySearch
+		Pair<Integer, Integer> binarySearchResult = Graph.binarySearch(lat, 0, Graph.nodesLat.length - 1);
 		System.out.println("Finding closest node to coordinates " + lon + " " + lat);
-		long nodeFindStart = System.currentTimeMillis();
+
 		double[] coords = { 0.0, 0.0 };
 
-		int closestNode = Graph.findClosestNode(lat, lon);
+		long nodeFindStart = System.currentTimeMillis();
+		int closestNode = Graph.findClosestNode(lat, lon, binarySearchResult);
+		long nodeFindEnd = System.currentTimeMillis();
 
 		double latClosestNode = Graph.getLatitude(closestNode);
 		double lonClosestNode = Graph.getLongitude(closestNode);
@@ -39,7 +44,6 @@ public class Benchmark {
 		coords[0] = latClosestNode;
 		coords[1] = lonClosestNode;
 
-		long nodeFindEnd = System.currentTimeMillis();
 		System.out.println(
 				"\tfinding node took " + (nodeFindEnd - nodeFindStart) + "ms: " + coords[0] + ", " + coords[1]);
 
