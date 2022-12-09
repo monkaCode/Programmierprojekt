@@ -240,11 +240,19 @@ public class Graph {
             int leftIndex = nodeSortedLatIndex - i;
 
             /**
+             * if distance between the longtitude of the given coordinate
+             * and the longitude of the current searched node is higher than
+             * maxDistance then this node cannot be the closest node
+             */
+            if (Math.abs(getLongitude(nodesLatIndex[leftIndex]) - longitude) > maxDistance) {
+                continue;
+            }
+
+            /**
              * if the distance between the latitude of the given coordinate
              * and the latitude of the current searched node is higher than maxDistance
              * then there is no need to look further
              */
-
             if (latitude - nodesLat[leftIndex] > maxDistance) {
                 break;
             }
@@ -265,6 +273,14 @@ public class Graph {
         for (int i = 1; nodeSortedLatIndex + i < nodesLatIndex.length; i++) {
             int rightIndex = nodeSortedLatIndex + i;
 
+            /**
+             * if distance between the longtitude of the given coordinate
+             * and the longitude of the current searched node is higher than
+             * maxDistance then this node cannot be the closest node
+             */
+            if (Math.abs(getLongitude(nodesLatIndex[rightIndex]) - longitude) > maxDistance) {
+                continue;
+            }
             /**
              * if the distance between the latitude of the given coordinate
              * and the latitude of the current searched node is higher than maxDistance

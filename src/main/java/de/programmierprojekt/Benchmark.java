@@ -32,6 +32,7 @@ public class Benchmark {
 		double[] coords = { 0.0, 0.0 };
 
 		int closestNode = Graph.findClosestNode(lat, lon);
+
 		double latClosestNode = Graph.getLatitude(closestNode);
 		double lonClosestNode = Graph.getLongitude(closestNode);
 
