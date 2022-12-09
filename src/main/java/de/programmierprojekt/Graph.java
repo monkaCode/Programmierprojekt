@@ -187,7 +187,7 @@ public class Graph {
      *         searched latitude value
      *         Right := Index of the Node in nodesLat[]
      */
-    private static Pair<Integer, Integer> binarySearch(double latitude, int lowerBound, int upperBound) {
+    public static Pair<Integer, Integer> binarySearch(double latitude, int lowerBound, int upperBound) {
 
         if (upperBound == lowerBound) {
             return new Pair<Integer, Integer>(nodesLatIndex[upperBound], upperBound);
@@ -218,9 +218,7 @@ public class Graph {
         }
     }
 
-    public static int findClosestNode(double latitude, double longitude) {
-        // find temporary closest node with binarySearch
-        Pair<Integer, Integer> binarySearchResult = binarySearch(latitude, 0, nodesLat.length - 1);
+    public static int findClosestNode(double latitude, double longitude, Pair<Integer, Integer> binarySearchResult) {
 
         int currentNodeIndex = binarySearchResult.getValue0();
         int nodeSortedLatIndex = binarySearchResult.getValue1();
