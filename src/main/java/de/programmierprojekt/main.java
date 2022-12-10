@@ -1,14 +1,19 @@
 package de.programmierprojekt;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
 import org.javatuples.Pair;
 
 public class main {
     public static void main(String[] args) throws Exception {
         final long startTime = System.currentTimeMillis();
         final long beforeUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-        String pathName = "DataSets/germany.fmi";
+        String pathName = "DataSets/stuttgart.fmi";
 
         Graph.readGraph(pathName);
+        System.out.println("graph read finished");
 
         final long endTime = System.currentTimeMillis();
         System.out.println("Time to create arrays: " + (endTime - startTime) + "ms");
@@ -17,30 +22,42 @@ public class main {
         Graph.prepareBinarySearch();
         System.out.println("Preparing finished!");
 
-        Pair<Integer, Integer> res1 = Graph.binarySearch(48.012d, 0, Graph.nodesLat.length - 1);
-        Pair<Integer, Integer> res2 = Graph.binarySearch(49.02d, 0, Graph.nodesLat.length - 1);
-        Pair<Integer, Integer> res3 = Graph.binarySearch(50.14422d, 0, Graph.nodesLat.length - 1);
-        Pair<Integer, Integer> res4 = Graph.binarySearch(48.012, 0, Graph.nodesLat.length - 1);
+        Dijkstra.prepareDijkstra(0);
+        System.out.println("Dijsktra is prepared");
+        Dijkstra.oneToAllDijkstra(0);
 
-        final long findStart1 = System.currentTimeMillis();
-        System.out.println(Graph.findClosestNode(48.012d, 9.045d, res1));
-        final long findEnd1 = System.currentTimeMillis();
-        System.out.println("Find did take: " + (findEnd1 - findStart1) + " ms");
+        
 
-        final long findStart = System.currentTimeMillis();
-        System.out.println(Graph.findClosestNode(49.02d, 10.045d, res2));
-        final long findEnd = System.currentTimeMillis();
-        System.out.println("Find did take: " + (findEnd - findStart) + " ms");
+        if(Arrays.equals(Dijkstra.queueIndex, Dijkstra.queueNodeIndex)) {
+            System.out.println("true");
+        }
+        // System.out.println(Arrays.toString(Dijkstra.queueIndex));
+        // System.out.println(Arrays.toString(Dijkstra.queueNodeIndex));
 
-        final long findStart2 = System.currentTimeMillis();
-        System.out.println(Graph.findClosestNode(50.14422d, 8.045d, res3));
-        final long findEnd2 = System.currentTimeMillis();
-        System.out.println("Find did take: " + (findEnd2 - findStart2) + " ms");
+        // Pair<Integer, Integer> res1 = Graph.binarySearch(48.012d, 0, Graph.nodesLat.length - 1);
+        // Pair<Integer, Integer> res2 = Graph.binarySearch(49.02d, 0, Graph.nodesLat.length - 1);
+        // Pair<Integer, Integer> res3 = Graph.binarySearch(50.14422d, 0, Graph.nodesLat.length - 1);
+        // Pair<Integer, Integer> res4 = Graph.binarySearch(48.012, 0, Graph.nodesLat.length - 1);
 
-        final long findStart3 = System.currentTimeMillis();
-        System.out.println(Graph.findClosestNode(48.012d, 9.045d, res4));
-        final long findEnd3 = System.currentTimeMillis();
-        System.out.println("Find did take: " + (findEnd3 - findStart3) + " ms");
+        // final long findStart1 = System.currentTimeMillis();
+        // System.out.println(Graph.findClosestNode(48.012d, 9.045d, res1));
+        // final long findEnd1 = System.currentTimeMillis();
+        // System.out.println("Find did take: " + (findEnd1 - findStart1) + " ms");
+
+        // final long findStart = System.currentTimeMillis();
+        // System.out.println(Graph.findClosestNode(49.02d, 10.045d, res2));
+        // final long findEnd = System.currentTimeMillis();
+        // System.out.println("Find did take: " + (findEnd - findStart) + " ms");
+
+        // final long findStart2 = System.currentTimeMillis();
+        // System.out.println(Graph.findClosestNode(50.14422d, 8.045d, res3));
+        // final long findEnd2 = System.currentTimeMillis();
+        // System.out.println("Find did take: " + (findEnd2 - findStart2) + " ms");
+
+        // final long findStart3 = System.currentTimeMillis();
+        // System.out.println(Graph.findClosestNode(48.012d, 9.045d, res4));
+        // final long findEnd3 = System.currentTimeMillis();
+        // System.out.println("Find did take: " + (findEnd3 - findStart3) + " ms");
 
         // System.out.println(Graph.findClosestNode(48.3, 8.8d));
         // System.out.println(Graph.findClosestNode(48.9d, 11.9d));
