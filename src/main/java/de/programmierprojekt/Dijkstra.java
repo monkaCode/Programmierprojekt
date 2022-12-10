@@ -58,8 +58,8 @@ public class Dijkstra {
         int start = 0;
         int end = 0;
         while(start < queue.length) {
-            if(start % 100000 == 0) {
-                System.out.println(start);
+            if(start % 1000000 == 0) {
+                System.out.println(start + " | " + end);
             }
             
             getMinimum(start, end);
@@ -68,12 +68,24 @@ public class Dijkstra {
             int startOffset = Graph.edgeOffset[nodeID];
             for(int i=0; i<numberOfEdges; i++) {
                 int targetNodeID = Graph.edgeData[1][startOffset+i];
-                if(getPositionInQueueOfNodeID(targetNodeID) > end) {
-                    end = getPositionInQueueOfNodeID(targetNodeID);
-                }
+                // if(getPositionInQueueOfNodeID(targetNodeID) > end) {
+                //     end = getPositionInQueueOfNodeID(targetNodeID);
+                // }
                 int edgeCost = Graph.edgeData[2][startOffset+i];
                 if(getCostOfNodeID(nodeID)+edgeCost < getCostOfNodeID(targetNodeID)) {
+                    if(Double.isInfinite(getCostOfNodeID(targetNodeID))) {
+                        end++;
+                    }
                     queue[getPositionInQueueOfNodeID(targetNodeID)] = getCostOfNodeID(nodeID)+edgeCost;
+                    // for(int j=end; j<queue.length; j++) {
+                    //     if(Double.isInfinite(queue[j])) {
+                    //         // System.out.println(j);
+                    //         s
+                    //         end = j;
+                    //         break;
+                    //     }
+                    // }
+                    swap(getPositionInQueueOfNodeID(targetNodeID), end);
                 }
             }
             start++;
