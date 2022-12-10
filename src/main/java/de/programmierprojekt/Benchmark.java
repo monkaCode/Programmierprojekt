@@ -4,9 +4,11 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Scanner;
 
+import org.javatuples.Pair;
+
 public class Benchmark {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		// read parameters (parameters are expected in exactly this order)
 		String graphPath = args[1];
 		double lon = Double.parseDouble(args[3]);
@@ -17,20 +19,33 @@ public class Benchmark {
 		// run benchmarks
 		System.out.println("Reading graph file and creating graph data structure (" + graphPath + ")");
 		long graphReadStart = System.currentTimeMillis();
-		// TODO: read graph here
+
+		Graph.readGraph(graphPath);
+
 		long graphReadEnd = System.currentTimeMillis();
 		System.out.println("\tgraph read took " + (graphReadEnd - graphReadStart) + "ms");
 
 		System.out.println("Setting up closest node data structure...");
-		// TODO: set up closest node data structure here
 
+		Graph.prepareBinarySearch();
+		// find temporary closest node with binarySearch
+		Pair<Integer, Integer> binarySearchResult = Graph.binarySearch(lat, 0, Graph.nodesLat.length - 1);
 		System.out.println("Finding closest node to coordinates " + lon + " " + lat);
-		long nodeFindStart = System.currentTimeMillis();
-		double[] coords = {0.0, 0.0};
-		// TODO: find closest node here and write coordinates into coords
 
+		double[] coords = { 0.0, 0.0 };
+
+		long nodeFindStart = System.currentTimeMillis();
+		int closestNode = Graph.findClosestNode(lat, lon, binarySearchResult);
 		long nodeFindEnd = System.currentTimeMillis();
-		System.out.println("\tfinding node took " + (nodeFindEnd - nodeFindStart) + "ms: " + coords[0] + ", " + coords[1]);
+
+		double latClosestNode = Graph.getLatitude(closestNode);
+		double lonClosestNode = Graph.getLongitude(closestNode);
+
+		coords[0] = latClosestNode;
+		coords[1] = lonClosestNode;
+
+		System.out.println(
+				"\tfinding node took " + (nodeFindEnd - nodeFindStart) + "ms: " + coords[0] + ", " + coords[1]);
 
 		System.out.println("Running one-to-one Dijkstras for queries in .que file " + quePath);
 		long queStart = System.currentTimeMillis();
