@@ -12,6 +12,8 @@ public class Dijkstra {
 
     static int[] queueNodeIndex;
 
+    static int secondMinIndex = 0;
+
     static double getCostOfNodeID(int nodeID) {
         return queue[queueIndex[nodeID]];
     }
@@ -45,7 +47,7 @@ public class Dijkstra {
         queueIndex = new int[Graph.numberOfNodes];
         queueNodeIndex = new int[Graph.numberOfNodes];
 
-        for(int i=0; i<Graph.numberOfNodes; i++) {
+        for (int i = 0; i < Graph.numberOfNodes; i++) {
             queue[i] = Double.POSITIVE_INFINITY;
             queueIndex[i] = i;
             queueNodeIndex[i] = i;
@@ -57,35 +59,44 @@ public class Dijkstra {
     static void oneToAllDijkstra(int srcNodeID) {
         int start = 0;
         int end = 0;
-        while(start < queue.length) {
-            if(start % 1000000 == 0) {
+        int updatedValuesMinIndex = 0;
+        while (start < queue.length) {
+            if (start % 1000000 == 0) {
                 System.out.println(start + " | " + end);
             }
-            
-            getMinimum(start, end);
+
+            if (queue[updatedValuesMinIndex] <= queue[secondMinIndex]) {
+
+                swap(start, updatedValuesMinIndex);
+            } else {
+                swap(start, secondMinIndex);
+            }
             int nodeID = getNodeIDOfPositionInQueue(start);
-            int numberOfEdges = Graph.edgeOffset[nodeID+1]-Graph.edgeOffset[nodeID];
+            int numberOfEdges = Graph.edgeOffset[nodeID + 1] - Graph.edgeOffset[nodeID];
             int startOffset = Graph.edgeOffset[nodeID];
-            for(int i=0; i<numberOfEdges; i++) {
-                int targetNodeID = Graph.edgeData[1][startOffset+i];
-                // if(getPositionInQueueOfNodeID(targetNodeID) > end) {
-                //     end = getPositionInQueueOfNodeID(targetNodeID);
-                // }
-                int edgeCost = Graph.edgeData[2][startOffset+i];
-                if(getCostOfNodeID(nodeID)+edgeCost < getCostOfNodeID(targetNodeID)) {
-                    if(Double.isInfinite(getCostOfNodeID(targetNodeID))) {
+
+            int[] targetNodeIDs = new int[numberOfEdges];
+            for (int i = 0; i < numberOfEdges; i++) {
+                int targetNodeID = Graph.edgeData[1][startOffset + i];
+                int edgeCost = Graph.edgeData[2][startOffset + i];
+                double newCost = getCostOfNodeID(nodeID) + edgeCost;
+
+                targetNodeIDs[i] = targetNodeID;
+
+                if (i == 0) {
+                    updatedValuesMinIndex = getPositionInQueueOfNodeID(targetNodeID);
+                }
+
+                if (newCost < getCostOfNodeID(targetNodeID)) {
+                    if (Double.isInfinite(getCostOfNodeID(targetNodeID))) {
                         end++;
                     }
-                    queue[getPositionInQueueOfNodeID(targetNodeID)] = getCostOfNodeID(nodeID)+edgeCost;
-                    // for(int j=end; j<queue.length; j++) {
-                    //     if(Double.isInfinite(queue[j])) {
-                    //         // System.out.println(j);
-                    //         s
-                    //         end = j;
-                    //         break;
-                    //     }
-                    // }
+                    queue[getPositionInQueueOfNodeID(targetNodeID)] = newCost;
                     swap(getPositionInQueueOfNodeID(targetNodeID), end);
+
+                    if (getCostOfNodeID(targetNodeID) > newCost) {
+                        updatedValuesMinIndex = getPositionInQueueOfNodeID(targetNodeID);
+                    }
                 }
             }
             start++;
@@ -95,13 +106,17 @@ public class Dijkstra {
     static void getMinimum(int position, int end) {
         double tempMinimum = queue[position];
         int tempI = position;
-        for(int i=position; i<=end; i++) {
-            if(queue[i] < tempMinimum) {
+        for (int i = position; i <= end; i++) {
+            if (queue[i] < tempMinimum) {
                 tempMinimum = queue[i];
                 tempI = i;
             }
         }
         swap(tempI, position);
+    }
+
+    static int getSecondMinimum(int[] targetNodeIDs) {
+
     }
 
 }
