@@ -10,7 +10,7 @@ public class main {
     public static void main(String[] args) throws Exception {
         final long startTime = System.currentTimeMillis();
         final long beforeUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-        String pathName = "DataSets/toy.fmi";
+        String pathName = "DataSets/germany.fmi";
 
         Graph.readGraph(pathName);
         System.out.println("graph read finished");
@@ -22,17 +22,21 @@ public class main {
         Graph.prepareBinarySearch();
         System.out.println("Preparing finished!");
 
-        // Pair<Integer, Integer> res1 = Graph.binarySearch(48.012d, 0, Graph.nodesLat.length - 1);
-        // Pair<Integer, Integer> res2 = Graph.binarySearch(49.02d, 0, Graph.nodesLat.length - 1);
-        // Pair<Integer, Integer> res3 = Graph.binarySearch(50.14422d, 0, Graph.nodesLat.length - 1);
-        // Pair<Integer, Integer> res4 = Graph.binarySearch(48.012, 0, Graph.nodesLat.length - 1);
+        // Pair<Integer, Integer> res1 = Graph.binarySearch(48.012d, 0,
+        // Graph.nodesLat.length - 1);
+        // Pair<Integer, Integer> res2 = Graph.binarySearch(49.02d, 0,
+        // Graph.nodesLat.length - 1);
+        // Pair<Integer, Integer> res3 = Graph.binarySearch(50.14422d, 0,
+        // Graph.nodesLat.length - 1);
+        // Pair<Integer, Integer> res4 = Graph.binarySearch(48.012, 0,
+        // Graph.nodesLat.length - 1);
 
         final long findStart1 = System.currentTimeMillis();
         Dijkstra.prepareDijkstra(2);
         System.out.println("Dijsktra is prepared");
         Dijkstra.oneToAllDijkstra(2);
         final long findEnd1 = System.currentTimeMillis();
-        System.out.println("Find did take: " + (findEnd1 - findStart1)/1000 + " s");
+        System.out.println("Find did take: " + (findEnd1 - findStart1) / 1000 + " s");
 
         // System.out.println(Arrays.toString(Dijkstra.queue));
         // System.out.println(Arrays.toString(Dijkstra.queueIndex));
