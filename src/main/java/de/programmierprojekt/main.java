@@ -1,16 +1,10 @@
 package de.programmierprojekt;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-
-import org.javatuples.Pair;
-
 public class main {
     public static void main(String[] args) throws Exception {
         final long startTime = System.currentTimeMillis();
         final long beforeUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-        String pathName = "DataSets/toy.fmi";
+        String pathName = "DataSets/germany.fmi";
 
         Graph.readGraph(pathName);
         System.out.println("graph read finished");
@@ -27,13 +21,17 @@ public class main {
         // Pair<Integer, Integer> res3 = Graph.binarySearch(50.14422d, 0, Graph.nodesLat.length - 1);
         // Pair<Integer, Integer> res4 = Graph.binarySearch(48.012, 0, Graph.nodesLat.length - 1);
 
+        int srcNodeID = 8371825;
+        int targetNodeID = 16743651;
+
         final long findStart1 = System.currentTimeMillis();
-        Dijkstra.prepareDijkstra(2);
+        Dijkstra.prepareDijkstra(srcNodeID);
         System.out.println("Dijsktra is prepared");
-        Dijkstra.oneToAllDijkstra(2);
+        Dijkstra.oneToAllDijkstra(srcNodeID);
         final long findEnd1 = System.currentTimeMillis();
         System.out.println("Find did take: " + (findEnd1 - findStart1)/1000 + " s");
 
+        System.out.println(Dijkstra.queue[Dijkstra.getPositionInQueueOfNodeID(targetNodeID)]);
         // System.out.println(Arrays.toString(Dijkstra.queue));
         // System.out.println(Arrays.toString(Dijkstra.queueIndex));
         // System.out.println(Arrays.toString(Dijkstra.queueNodeIndex));
