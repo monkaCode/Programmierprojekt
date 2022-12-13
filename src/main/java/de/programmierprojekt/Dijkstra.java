@@ -8,6 +8,9 @@ public class Dijkstra {
 
     static int[] queueNodeIndex;
 
+    static int min2;
+    static int amountOfComparisons = 0;
+
     static int getCostOfNodeID(int nodeID) {
         return queue[queueIndex[nodeID]];
     }
@@ -53,12 +56,13 @@ public class Dijkstra {
     static void oneToAllDijkstra(int srcNodeID) {
         int start = 0;
         int end = 0;
+        
         while(start < queue.length) {
             if(start % 1000000 == 0) {
                 System.out.println(start + " | " + end);
             }
             
-            getMinimum(start, end);
+            getMinimum(start, end, min2);
             int nodeID = getNodeIDOfPositionInQueue(start);
             int numberOfEdges = Graph.edgeOffset[nodeID+1]-Graph.edgeOffset[nodeID];
             int startOffset = Graph.edgeOffset[nodeID];
@@ -68,6 +72,9 @@ public class Dijkstra {
                 int oldCost = getCostOfNodeID(targetNodeID);
                 int newCost = getCostOfNodeID(nodeID)+edgeCost;
                 if(newCost < oldCost) {
+                    if(newCost < getCostOfNodeID(min2)) {
+                        min2 = targetNodeID;
+                    }
                     if(Integer.MAX_VALUE == getCostOfNodeID(targetNodeID)) {
                         end++;
                     }
@@ -78,18 +85,26 @@ public class Dijkstra {
             }
             start++;
         }
+        System.out.println(amountOfComparisons);
     }
 
-    static void getMinimum(int position, int end) {
-        int tempMinimum = queue[position];
-        int tempI = position;
-        for(int i=position; i<=end; i++) {
-            if(queue[i] < tempMinimum) {
-                tempMinimum = queue[i];
-                tempI = i;
+    static void getMinimum(int position, int end, int lastMin2) {
+        int tempMinimum = position;
+        if(position < queue.length-1 && position % 2 == 0) {
+            min2 = getNodeIDOfPositionInQueue(position+1);
+            for(int i=position; i<=end; i++) {
+                amountOfComparisons++;
+                if(queue[i] < queue[tempMinimum]) {
+                    min2 = getNodeIDOfPositionInQueue(tempMinimum);
+                    tempMinimum = i;
+                }
             }
+            swap(tempMinimum, position);
+        } else {
+            swap(getPositionInQueueOfNodeID(lastMin2), position);
         }
-        swap(tempI, position);
+        
+        
     }
 
 }
