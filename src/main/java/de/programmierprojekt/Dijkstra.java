@@ -54,7 +54,7 @@ public class Dijkstra {
     /**
      * @return costs[], where:
      *         cost[nodeID] := gives the distance from srcNodeID to nodeID if there
-     *         ist a path available,
+     *         is a path available,
      *         cost[nodeID] := Integer.maxValue otherwise
      */
     public int[] oneToAllDijkstra() {
@@ -109,7 +109,6 @@ public class Dijkstra {
             int edgeID = startOffset + i;
 
             int targetNodeID = Graph.getTargetNodeID(edgeID);
-            ;
 
             if (!visited[targetNodeID]) {
                 int edgeCost = Graph.getCost(edgeID);
