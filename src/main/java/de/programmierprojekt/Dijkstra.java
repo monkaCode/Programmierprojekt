@@ -6,7 +6,13 @@ import java.util.PriorityQueue;
 
 public class Dijkstra {
 
+    /**
+     * Convention:
+     * For every element "node" of queue:
+     * node := {nodeID, cost}
+     */
     private PriorityQueue<int[]> queue;
+
     private int[] costs;
     private boolean[] visited;
 
@@ -15,6 +21,10 @@ public class Dijkstra {
     }
 
     private void prepareDijkstra(int srcNodeID) {
+        /**
+         * queue compares every int[] node := {nodeID, cost}
+         * by the cost value
+         */
         queue = new PriorityQueue<>(new Comparator<int[]>() {
 
             @Override
@@ -30,55 +40,44 @@ public class Dijkstra {
 
         });
 
-        visited = new boolean[Graph.numberOfNodes];
+        visited = new boolean[Graph.getNumberOfNodes()];
         Arrays.fill(visited, false);
 
-        costs = new int[Graph.numberOfNodes];
+        costs = new int[Graph.getNumberOfNodes()];
         Arrays.fill(costs, Integer.MAX_VALUE);
-        costs[srcNodeID] = 0;
 
+        costs[srcNodeID] = 0;
         int[] srcNode = { srcNodeID, 0 };
         queue.add(srcNode);
     }
 
+    /**
+     * @return costs[], where:
+     *         cost[nodeID] := gives the distance from srcNodeID to nodeID if there
+     *         ist a path available,
+     *         cost[nodeID] := Integer.maxValue otherwise
+     */
     public int[] oneToAllDijkstra() {
 
         while (!queue.isEmpty()) {
-            int[] minNodeIDArr = queue.poll();
-            int minNodeID = minNodeIDArr[0];
+            int[] minNode = queue.poll();
+            int minNodeID = minNode[0];
 
             if (visited[minNodeID]) {
                 continue;
             }
 
-            visited[minNodeID] = true;
-
-            int numberOfEdges = Graph.edgeOffset[minNodeID + 1] - Graph.edgeOffset[minNodeID];
-            int startOffset = Graph.edgeOffset[minNodeID];
-
-            for (int i = 0; i < numberOfEdges; i++) {
-                int targetNodeID = Graph.edgeData[1][startOffset + i];
-
-                if (!visited[targetNodeID]) {
-
-                    int edgeCost = Graph.edgeData[2][startOffset + i];
-                    int calcDistance = costs[minNodeID] + edgeCost;
-
-                    if (costs[targetNodeID] > calcDistance) {
-                        costs[targetNodeID] = calcDistance;
-                        int[] tmp = { targetNodeID, calcDistance };
-                        queue.add(tmp);
-                    }
-                }
-            }
+            updateValues(minNodeID);
         }
         return costs;
     }
 
-    public int oneToOneDijkstra(int trgNodeID) throws Exception {
+    public int oneToOneDijkstra(int trgNodeID) {
+
         while (!queue.isEmpty()) {
-            int[] minNodeIDArr = queue.poll();
-            int minNodeID = minNodeIDArr[0];
+
+            int[] minNode = queue.poll();
+            int minNodeID = minNode[0];
 
             if (minNodeID == trgNodeID) {
                 return costs[trgNodeID];
@@ -88,27 +87,43 @@ public class Dijkstra {
                 continue;
             }
 
-            visited[minNodeID] = true;
+            updateValues(minNodeID);
 
-            int numberOfEdges = Graph.edgeOffset[minNodeID + 1] - Graph.edgeOffset[minNodeID];
-            int startOffset = Graph.edgeOffset[minNodeID];
+        }
+        // if there is no way to the targetNode
+        return -1;
+    }
 
-            for (int i = 0; i < numberOfEdges; i++) {
-                int targetNodeID = Graph.edgeData[1][startOffset + i];
+    /**
+     * One Iteration of Dijkstras Algorithm for specific nodeID
+     * 
+     * @param minNodeID node with highest priority
+     */
+    private void updateValues(int minNodeID) {
+        visited[minNodeID] = true;
 
-                if (!visited[targetNodeID]) {
+        int numberOfEdges = Graph.getNumberOfEdges(minNodeID);
+        int startOffset = Graph.getOffsetForEdges(minNodeID);
 
-                    int edgeCost = Graph.edgeData[2][startOffset + i];
-                    int calcDistance = costs[minNodeID] + edgeCost;
+        for (int i = 0; i < numberOfEdges; i++) {
+            int edgeID = startOffset + i;
 
-                    if (costs[targetNodeID] > calcDistance) {
-                        costs[targetNodeID] = calcDistance;
-                        int[] tmp = { targetNodeID, calcDistance };
-                        queue.add(tmp);
-                    }
+            int targetNodeID = Graph.getTargetNodeID(edgeID);
+            ;
+
+            if (!visited[targetNodeID]) {
+                int edgeCost = Graph.getCost(edgeID);
+
+                int calcDistance = costs[minNodeID] + edgeCost;
+
+                if (costs[targetNodeID] > calcDistance) {
+
+                    costs[targetNodeID] = calcDistance;
+                    int[] tmp = { targetNodeID, calcDistance };
+                    queue.add(tmp);
+
                 }
             }
         }
-        return -1;
     }
 }

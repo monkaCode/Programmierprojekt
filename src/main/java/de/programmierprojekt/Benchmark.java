@@ -4,11 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Scanner;
 
-import org.javatuples.Pair;
-
 public class Benchmark {
 
 	public static void main(String[] args) throws Exception {
+
 		// read parameters (parameters are expected in exactly this order)
 		String graphPath = args[1];
 		double lon = Double.parseDouble(args[3]);
@@ -27,16 +26,14 @@ public class Benchmark {
 
 		System.out.println("Setting up closest node data structure...");
 
-		Graph.prepareBinarySearch();
 		// find temporary closest node with binarySearch
-		Pair<Integer, Integer> binarySearchResult = Graph.binarySearch(lat, 0, Graph.nodesLat.length - 1);
 		System.out.println("Finding closest node to coordinates " + lon + " " + lat);
+		long nodeFindStart = System.currentTimeMillis();
 
 		double[] coords = { 0.0, 0.0 };
+		Graph.prepareBinarySearch();
 
-		long nodeFindStart = System.currentTimeMillis();
-		int closestNode = Graph.findClosestNode(lat, lon, binarySearchResult);
-		long nodeFindEnd = System.currentTimeMillis();
+		int closestNode = Graph.findClosestNode(lat, lon);
 
 		double latClosestNode = Graph.getLatitude(closestNode);
 		double lonClosestNode = Graph.getLongitude(closestNode);
@@ -44,6 +41,7 @@ public class Benchmark {
 		coords[0] = latClosestNode;
 		coords[1] = lonClosestNode;
 
+		long nodeFindEnd = System.currentTimeMillis();
 		System.out.println(
 				"\tfinding node took " + (nodeFindEnd - nodeFindStart) + "ms: " + coords[0] + ", " + coords[1]);
 
@@ -51,7 +49,6 @@ public class Benchmark {
 		long queStart = System.currentTimeMillis();
 		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(quePath))) {
 			String currLine;
-			int i = 1;
 			while ((currLine = bufferedReader.readLine()) != null) {
 				int oneToOneSourceNodeId = Integer.parseInt(currLine.substring(0, currLine.indexOf(" ")));
 				int oneToOneTargetNodeId = Integer.parseInt(currLine.substring(currLine.indexOf(" ") + 1));
@@ -59,8 +56,8 @@ public class Benchmark {
 
 				Dijkstra dijkstra = new Dijkstra(oneToOneSourceNodeId);
 				oneToOneDistance = dijkstra.oneToOneDijkstra(oneToOneTargetNodeId);
-				System.out.println(i + " " + oneToOneDistance);
-				i++;
+
+				System.out.println(oneToOneDistance);
 			}
 		} catch (Exception e) {
 			System.out.println("Exception...");
@@ -85,6 +82,7 @@ public class Benchmark {
 		// TODO set oneToAllDistance to the distance from sourceNodeId to
 		// targetNodeId as computed by the one-to-all Dijkstra
 		oneToAllDistance = distances[targetNodeId];
+
 		System.out.println("Distance from " + sourceNodeId + " to " + targetNodeId + " is " + oneToAllDistance);
 	}
 
