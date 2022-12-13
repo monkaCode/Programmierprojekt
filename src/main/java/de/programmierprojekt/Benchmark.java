@@ -26,12 +26,13 @@ public class Benchmark {
 
 		System.out.println("Setting up closest node data structure...");
 
+		Graph.prepareBinarySearch();
+
 		// find temporary closest node with binarySearch
 		System.out.println("Finding closest node to coordinates " + lon + " " + lat);
 		long nodeFindStart = System.currentTimeMillis();
 
 		double[] coords = { 0.0, 0.0 };
-		Graph.prepareBinarySearch();
 
 		int closestNode = Graph.findClosestNode(lat, lon);
 
