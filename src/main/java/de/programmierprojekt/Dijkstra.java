@@ -6,7 +6,7 @@ import java.util.PriorityQueue;
 
 public class Dijkstra {
 
-    private PriorityQueue<Integer> queue;
+    private PriorityQueue<int[]> queue;
     private int[] costs;
     private boolean[] visited;
 
@@ -15,13 +15,13 @@ public class Dijkstra {
     }
 
     private void prepareDijkstra(int srcNodeID) {
-        queue = new PriorityQueue<>(new Comparator<Integer>() {
+        queue = new PriorityQueue<>(new Comparator<int[]>() {
 
             @Override
-            public int compare(Integer nodeID1, Integer nodeID2) {
-                if (costs[nodeID1] > costs[nodeID2]) {
+            public int compare(int[] o1, int[] o2) {
+                if (o1[1] > o2[1]) {
                     return 1;
-                } else if (costs[nodeID1] > costs[nodeID2]) {
+                } else if (o1[1] < o2[1]) {
                     return -1;
                 } else {
                     return 0;
@@ -37,13 +37,15 @@ public class Dijkstra {
         Arrays.fill(costs, Integer.MAX_VALUE);
         costs[srcNodeID] = 0;
 
-        queue.add(srcNodeID);
+        int[] srcNode = { srcNodeID, 0 };
+        queue.add(srcNode);
     }
 
     public int[] oneToAllDijkstra() {
 
         while (!queue.isEmpty()) {
-            int minNodeID = queue.poll();
+            int[] minNodeIDArr = queue.poll();
+            int minNodeID = minNodeIDArr[0];
 
             if (visited[minNodeID]) {
                 continue;
@@ -64,7 +66,8 @@ public class Dijkstra {
 
                     if (costs[targetNodeID] > calcDistance) {
                         costs[targetNodeID] = calcDistance;
-                        queue.add(targetNodeID);
+                        int[] tmp = { targetNodeID, calcDistance };
+                        queue.add(tmp);
                     }
                 }
             }
@@ -74,7 +77,8 @@ public class Dijkstra {
 
     public int oneToOneDijkstra(int trgNodeID) throws Exception {
         while (!queue.isEmpty()) {
-            int minNodeID = queue.poll();
+            int[] minNodeIDArr = queue.poll();
+            int minNodeID = minNodeIDArr[0];
 
             if (minNodeID == trgNodeID) {
                 return costs[trgNodeID];
@@ -99,11 +103,12 @@ public class Dijkstra {
 
                     if (costs[targetNodeID] > calcDistance) {
                         costs[targetNodeID] = calcDistance;
-                        queue.add(targetNodeID);
+                        int[] tmp = { targetNodeID, calcDistance };
+                        queue.add(tmp);
                     }
                 }
             }
         }
-        throw new Exception();
+        return -1;
     }
 }
