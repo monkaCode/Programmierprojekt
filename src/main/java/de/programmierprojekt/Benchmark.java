@@ -51,14 +51,16 @@ public class Benchmark {
 		long queStart = System.currentTimeMillis();
 		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(quePath))) {
 			String currLine;
+			int i = 1;
 			while ((currLine = bufferedReader.readLine()) != null) {
 				int oneToOneSourceNodeId = Integer.parseInt(currLine.substring(0, currLine.indexOf(" ")));
 				int oneToOneTargetNodeId = Integer.parseInt(currLine.substring(currLine.indexOf(" ") + 1));
 				int oneToOneDistance = -42;
-				// TODO set oneToOneDistance to the distance from
-				// oneToOneSourceNodeId to oneToOneSourceNodeId as computed by
-				// the one-to-one Dijkstra
-				System.out.println(oneToOneDistance);
+
+				Dijkstra dijkstra = new Dijkstra(oneToOneSourceNodeId);
+				oneToOneDistance = dijkstra.oneToOneDijkstra(oneToOneTargetNodeId);
+				System.out.println(i + " " + oneToOneDistance);
+				i++;
 			}
 		} catch (Exception e) {
 			System.out.println("Exception...");
@@ -69,7 +71,10 @@ public class Benchmark {
 
 		System.out.println("Computing one-to-all Dijkstra from node id " + sourceNodeId);
 		long oneToAllStart = System.currentTimeMillis();
-		// TODO: run one-to-all Dijkstra here
+
+		Dijkstra dijkstra = new Dijkstra(sourceNodeId);
+		int[] distances = dijkstra.oneToAllDijkstra();
+
 		long oneToAllEnd = System.currentTimeMillis();
 		System.out.println("\tone-to-all Dijkstra took " + (oneToAllEnd - oneToAllStart) + "ms");
 
@@ -79,6 +84,7 @@ public class Benchmark {
 		int oneToAllDistance = -42;
 		// TODO set oneToAllDistance to the distance from sourceNodeId to
 		// targetNodeId as computed by the one-to-all Dijkstra
+		oneToAllDistance = distances[targetNodeId];
 		System.out.println("Distance from " + sourceNodeId + " to " + targetNodeId + " is " + oneToAllDistance);
 	}
 

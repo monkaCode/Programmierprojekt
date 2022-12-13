@@ -7,6 +7,7 @@ public class main {
         String pathName = "DataSets/germany.fmi";
 
         Graph.readGraph(pathName);
+
         System.out.println("graph read finished");
 
         final long endTime = System.currentTimeMillis();
@@ -16,22 +17,34 @@ public class main {
         Graph.prepareBinarySearch();
         System.out.println("Preparing finished!");
 
-        // Pair<Integer, Integer> res1 = Graph.binarySearch(48.012d, 0, Graph.nodesLat.length - 1);
-        // Pair<Integer, Integer> res2 = Graph.binarySearch(49.02d, 0, Graph.nodesLat.length - 1);
-        // Pair<Integer, Integer> res3 = Graph.binarySearch(50.14422d, 0, Graph.nodesLat.length - 1);
-        // Pair<Integer, Integer> res4 = Graph.binarySearch(48.012, 0, Graph.nodesLat.length - 1);
+        // Pair<Integer, Integer> res1 = Graph.binarySearch(48.012d, 0,
+        // Graph.nodesLat.length - 1);
+        // Pair<Integer, Integer> res2 = Graph.binarySearch(49.02d, 0,
+        // Graph.nodesLat.length - 1);
+        // Pair<Integer, Integer> res3 = Graph.binarySearch(50.14422d, 0,
+        // Graph.nodesLat.length - 1);
+        // Pair<Integer, Integer> res4 = Graph.binarySearch(48.012, 0,
+        // Graph.nodesLat.length - 1);
 
-        int srcNodeID = 8371825;
+        int srcNodeID = 8371831;
         int targetNodeID = 16743651;
 
-        final long findStart1 = System.currentTimeMillis();
-        Dijkstra.prepareDijkstra(srcNodeID);
-        System.out.println("Dijsktra is prepared");
-        Dijkstra.oneToAllDijkstra(srcNodeID);
-        final long findEnd1 = System.currentTimeMillis();
-        System.out.println("Find did take: " + (findEnd1 - findStart1)/1000 + " s");
+        Dijkstra dijkstra = new Dijkstra(srcNodeID);
+        System.out.println(dijkstra.oneToOneDijkstra(targetNodeID));
 
-        System.out.println(Dijkstra.queue[Dijkstra.getPositionInQueueOfNodeID(targetNodeID)]);
+        Dijkstra dijkstra2 = new Dijkstra(srcNodeID);
+        int i = dijkstra2.oneToAllDijkstra()[targetNodeID];
+        System.out.println(i);
+
+        // final long findStart1 = System.currentTimeMillis();
+        // Dijkstra.prepareDijkstra(srcNodeID);
+        // System.out.println("Dijsktra is prepared");
+        // Dijkstra.oneToAllDijkstra();
+        // final long findEnd1 = System.currentTimeMillis();
+        // System.out.println("Find did take: " + (findEnd1 - findStart1) / 1000 + "
+        // s");
+
+        // System.out.println(Dijkstra.costs[targetNodeID]);
         // System.out.println(Arrays.toString(Dijkstra.queue));
         // System.out.println(Arrays.toString(Dijkstra.queueIndex));
         // System.out.println(Arrays.toString(Dijkstra.queueNodeIndex));
