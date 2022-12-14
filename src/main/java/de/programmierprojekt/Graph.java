@@ -11,7 +11,7 @@ public class Graph {
      * nodesLat[0][X] gives Latitude of node with ID X
      * nodesLat[1][X] gives Longitude of node with ID X
      */
-    static double[][] nodesLatLon;
+    private static double[][] nodesLatLon;
 
     /**
      * edgeOffset[X] gives the index from which the node with
@@ -21,17 +21,17 @@ public class Graph {
      * edgeData[1][X] gives the targetNodeID from edge with index X
      * edgeData[2][X] gives the cost of this edge with index X
      */
-    static int[] edgeOffset;
-    static int[][] edgeData;
+    private static int[] edgeOffset;
+    private static int[][] edgeData;
 
     /**
      * nodesLat[] sorted Array with all the Latitude values of the nodes
      * nodesLatIndex[X] gives the nodeID from the latitude value of nodeLat[X]
      */
-    static double[] nodesLat;
-    static int[] nodesLatIndex;
+    private static double[] nodesLat;
+    private static int[] nodesLatIndex;
 
-    static int numberOfNodes;
+    private static int numberOfNodes;
     private static int numberOfEdges;
 
     private static BufferedReader fileReader;
@@ -218,7 +218,8 @@ public class Graph {
         }
     }
 
-    public static int findClosestNode(double latitude, double longitude, Pair<Integer, Integer> binarySearchResult) {
+    public static int findClosestNode(double latitude, double longitude) {
+        Pair<Integer, Integer> binarySearchResult = Graph.binarySearch(latitude, 0, Graph.nodesLat.length - 1);
 
         int currentNodeIndex = binarySearchResult.getValue0();
         int nodeSortedLatIndex = binarySearchResult.getValue1();
@@ -301,11 +302,31 @@ public class Graph {
     }
 
     public static double getLatitude(int nodeID) {
-        return nodesLatLon[0][nodeID];
+        return Graph.nodesLatLon[0][nodeID];
     }
 
     public static double getLongitude(int nodeID) {
-        return nodesLatLon[1][nodeID];
+        return Graph.nodesLatLon[1][nodeID];
+    }
+
+    public static int getNumberOfNodes() {
+        return Graph.numberOfNodes;
+    }
+
+    public static int getNumberOfEdges(int nodeID) {
+        return Graph.edgeOffset[nodeID + 1] - Graph.edgeOffset[nodeID];
+    }
+
+    public static int getOffsetForEdges(int nodeID) {
+        return Graph.edgeOffset[nodeID];
+    }
+
+    public static int getTargetNodeID(int edgeID) {
+        return Graph.edgeData[1][edgeID];
+    }
+
+    public static int getCost(int edgeID) {
+        return Graph.edgeData[2][edgeID];
     }
 
 }

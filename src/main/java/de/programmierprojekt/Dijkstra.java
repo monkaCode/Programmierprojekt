@@ -1,95 +1,128 @@
 package de.programmierprojekt;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
 public class Dijkstra {
 
-    static int[] queue;
+    /**
+     * Convention:
+     * For every element "node" of queue:
+     * node := {nodeID, cost}
+     */
+    private PriorityQueue<int[]> queue;
 
-    static int[] queueIndex;
+    private int[] costs;
+    private boolean[] visited;
 
-    static int[] queueNodeIndex;
-
-    static int getCostOfNodeID(int nodeID) {
-        return queue[queueIndex[nodeID]];
+    public Dijkstra(int srcNodeID) {
+        prepareDijkstra(srcNodeID);
     }
 
-    static int getNodeIDOfPositionInQueue(int positionInQueue) {
-        return queueNodeIndex[positionInQueue];
-    }
+    private void prepareDijkstra(int srcNodeID) {
+        /**
+         * queue compares every int[] node := {nodeID, cost}
+         * by the cost value
+         */
+        queue = new PriorityQueue<>(new Comparator<int[]>() {
 
-    static int getPositionInQueueOfNodeID(int nodeID) {
-        return queueIndex[nodeID];
-    }
-
-    static void swap(int i, int j) {
-        int tempQueue = queue[i];
-        queue[i] = queue[j];
-        queue[j] = tempQueue;
-
-        int nodeIDi = getNodeIDOfPositionInQueue(i);
-        int nodeIDj = getNodeIDOfPositionInQueue(j);
-        int tempQueueIndex = getPositionInQueueOfNodeID(nodeIDi);
-        queueIndex[nodeIDi] = getPositionInQueueOfNodeID(nodeIDj);
-        queueIndex[nodeIDj] = tempQueueIndex;
-
-        int tempQueueNodeIndex = getNodeIDOfPositionInQueue(i);
-        queueNodeIndex[i] = getNodeIDOfPositionInQueue(j);
-        queueNodeIndex[j] = tempQueueNodeIndex;
-    }
-
-    static void prepareDijkstra(int srcNodeID) {
-        queue = new int[Graph.numberOfNodes];
-        queueIndex = new int[Graph.numberOfNodes];
-        queueNodeIndex = new int[Graph.numberOfNodes];
-
-        for(int i=0; i<Graph.numberOfNodes; i++) {
-            queue[i] = Integer.MAX_VALUE;
-            queueIndex[i] = i;
-            queueNodeIndex[i] = i;
-        }
-        queue[srcNodeID] = 0;
-        swap(0, srcNodeID);
-    }
-
-    static void oneToAllDijkstra(int srcNodeID) {
-        int start = 0;
-        int end = 0;
-        while(start < queue.length) {
-            if(start % 1000000 == 0) {
-                System.out.println(start + " | " + end);
-            }
-            
-            getMinimum(start, end);
-            int nodeID = getNodeIDOfPositionInQueue(start);
-            int numberOfEdges = Graph.edgeOffset[nodeID+1]-Graph.edgeOffset[nodeID];
-            int startOffset = Graph.edgeOffset[nodeID];
-            for(int i=0; i<numberOfEdges; i++) {
-                int targetNodeID = Graph.edgeData[1][startOffset+i];
-                int edgeCost = Graph.edgeData[2][startOffset+i];
-                int oldCost = getCostOfNodeID(targetNodeID);
-                int newCost = getCostOfNodeID(nodeID)+edgeCost;
-                if(newCost < oldCost) {
-                    if(Integer.MAX_VALUE == getCostOfNodeID(targetNodeID)) {
-                        end++;
-                    }
-                    queue[getPositionInQueueOfNodeID(targetNodeID)] = newCost;
-                    
-                    swap(getPositionInQueueOfNodeID(targetNodeID), end);
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if (o1[1] > o2[1]) {
+                    return 1;
+                } else if (o1[1] < o2[1]) {
+                    return -1;
+                } else {
+                    return 0;
                 }
             }
-            start++;
-        }
+
+        });
+
+        visited = new boolean[Graph.getNumberOfNodes()];
+        Arrays.fill(visited, false);
+
+        costs = new int[Graph.getNumberOfNodes()];
+        Arrays.fill(costs, Integer.MAX_VALUE);
+
+        costs[srcNodeID] = 0;
+        int[] srcNode = { srcNodeID, 0 };
+        queue.add(srcNode);
     }
 
-    static void getMinimum(int position, int end) {
-        int tempMinimum = queue[position];
-        int tempI = position;
-        for(int i=position; i<=end; i++) {
-            if(queue[i] < tempMinimum) {
-                tempMinimum = queue[i];
-                tempI = i;
+    /**
+     * @return costs[], where:
+     *         cost[nodeID] := gives the distance from srcNodeID to nodeID if there
+     *         is a path available,
+     *         cost[nodeID] := Integer.maxValue otherwise
+     */
+    public int[] oneToAllDijkstra() {
+
+        while (!queue.isEmpty()) {
+            int[] minNode = queue.poll();
+            int minNodeID = minNode[0];
+
+            if (visited[minNodeID]) {
+                continue;
+            }
+
+            updateValues(minNodeID);
+        }
+        return costs;
+    }
+
+    public int oneToOneDijkstra(int trgNodeID) {
+
+        while (!queue.isEmpty()) {
+
+            int[] minNode = queue.poll();
+            int minNodeID = minNode[0];
+
+            if (minNodeID == trgNodeID) {
+                return costs[trgNodeID];
+            }
+
+            if (visited[minNodeID]) {
+                continue;
+            }
+
+            updateValues(minNodeID);
+
+        }
+        // if there is no way to the targetNode
+        return -1;
+    }
+
+    /**
+     * One Iteration of Dijkstras Algorithm for specific nodeID
+     * 
+     * @param minNodeID node with highest priority
+     */
+    private void updateValues(int minNodeID) {
+        visited[minNodeID] = true;
+
+        int numberOfEdges = Graph.getNumberOfEdges(minNodeID);
+        int startOffset = Graph.getOffsetForEdges(minNodeID);
+
+        for (int i = 0; i < numberOfEdges; i++) {
+            int edgeID = startOffset + i;
+
+            int targetNodeID = Graph.getTargetNodeID(edgeID);
+
+            if (!visited[targetNodeID]) {
+                int edgeCost = Graph.getCost(edgeID);
+
+                int calcDistance = costs[minNodeID] + edgeCost;
+
+                if (costs[targetNodeID] > calcDistance) {
+
+                    costs[targetNodeID] = calcDistance;
+                    int[] tmp = { targetNodeID, calcDistance };
+                    queue.add(tmp);
+
+                }
             }
         }
-        swap(tempI, position);
     }
-
 }
