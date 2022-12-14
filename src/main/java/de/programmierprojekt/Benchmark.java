@@ -31,7 +31,6 @@ public class Benchmark {
 		// find temporary closest node with binarySearch
 		System.out.println("Finding closest node to coordinates " + lon + " " + lat);
 		long nodeFindStart = System.currentTimeMillis();
-
 		double[] coords = { 0.0, 0.0 };
 
 		int closestNode = Graph.findClosestNode(lat, lon);
@@ -39,13 +38,14 @@ public class Benchmark {
 		double latClosestNode = Graph.getLatitude(closestNode);
 		double lonClosestNode = Graph.getLongitude(closestNode);
 
-		coords[0] = latClosestNode;
-		coords[1] = lonClosestNode;
+		coords[0] = lonClosestNode;
+		coords[1] = latClosestNode;
 
 		long nodeFindEnd = System.currentTimeMillis();
 		System.out.println(
 				"\tfinding node took " + (nodeFindEnd - nodeFindStart) + "ms: " + coords[0] + ", " + coords[1]);
 
+		// One-to-one Dijkstra with .que file
 		System.out.println("Running one-to-one Dijkstras for queries in .que file " + quePath);
 		long queStart = System.currentTimeMillis();
 		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(quePath))) {
@@ -67,6 +67,7 @@ public class Benchmark {
 		long queEnd = System.currentTimeMillis();
 		System.out.println("\tprocessing .que file took " + (queEnd - queStart) + "ms");
 
+		// One-to-all Dijkstra from node id
 		System.out.println("Computing one-to-all Dijkstra from node id " + sourceNodeId);
 		long oneToAllStart = System.currentTimeMillis();
 
