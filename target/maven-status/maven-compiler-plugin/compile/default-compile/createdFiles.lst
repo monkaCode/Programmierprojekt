@@ -1,5 +1,7 @@
+de/programmierprojekt/Server.class
+de/programmierprojekt/backend/Arithmetic.class
 de/programmierprojekt/Benchmark.class
-de/programmierprojekt/Graph.class
-de/programmierprojekt/Arithmetic.class
-de/programmierprojekt/Dijkstra$1.class
-de/programmierprojekt/Dijkstra.class
+de/programmierprojekt/Server$AddHandler.class
+de/programmierprojekt/backend/Graph.class
+de/programmierprojekt/backend/Dijkstra.class
+de/programmierprojekt/backend/Dijkstra$1.class

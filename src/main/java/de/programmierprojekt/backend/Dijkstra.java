@@ -1,4 +1,4 @@
-package de.programmierprojekt;
+package de.programmierprojekt.backend;
 
 import java.util.Arrays;
 import java.util.Comparator;

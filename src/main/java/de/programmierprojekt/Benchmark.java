@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Scanner;
 
+import de.programmierprojekt.backend.Dijkstra;
+import de.programmierprojekt.backend.Graph;
+
 public class Benchmark {
 
 	public static void main(String[] args) throws Exception {

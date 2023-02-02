@@ -1,4 +1,4 @@
-package de.programmierprojekt;
+package de.programmierprojekt.backend;
 
 public class Arithmetic {
 

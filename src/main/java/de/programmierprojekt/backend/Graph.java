@@ -1,4 +1,4 @@
-package de.programmierprojekt;
+package de.programmierprojekt.backend;
 
 import java.io.*;
 import java.util.*;
@@ -36,7 +36,7 @@ public class Graph {
 
     private static BufferedReader fileReader;
 
-    public static void readGraph(String pathName) throws Exception {
+    public static void readGraph(String pathName) throws IOException {
         fileReader = new BufferedReader(new FileReader(pathName));
 
         skip(5);
@@ -61,13 +61,13 @@ public class Graph {
      * @param n
      * @throws Exception
      */
-    private static void skip(int n) throws Exception {
+    private static void skip(int n) throws IOException {
         for (int i = 0; i < n; i++) {
             fileReader.readLine();
         }
     }
 
-    private static void fillNodesLatLon() throws Exception {
+    private static void fillNodesLatLon() throws IOException {
         for (int i = 0; i < numberOfNodes; i++) {
             String line = fileReader.readLine();
 
@@ -83,7 +83,7 @@ public class Graph {
         }
     }
 
-    private static void fillEdgeArrays() throws Exception {
+    private static void fillEdgeArrays() throws IOException {
         for (int i = 0; i < numberOfEdges; i++) {
             String line = fileReader.readLine();
 
