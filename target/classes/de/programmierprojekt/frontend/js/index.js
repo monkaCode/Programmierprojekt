@@ -95,12 +95,6 @@ function onMapClick(e) {
   }
   
   function clean() {
-    console.log(source.id + " ." + source.lat + " ." + 
-    source.lng);
-
-    console.log(target.id + " ." + target.lat + " ." + 
-    target.lng);
-
     source.id = null;
     source.lat = null;
     source.lng = null;
