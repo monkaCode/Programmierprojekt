@@ -5,7 +5,7 @@ let target = {lat:null, lng:null, id:null};
 let chooseSource = false;
 let chooseTarget = false;
 
-let path;
+let path = null;
 
 
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -52,54 +52,67 @@ function onMapClick(e) {
       target.lng = lng;
 
       $("#trgNode").text("lat: " + lat + " lng:" + lng + " (" + nodeID + ")");
-
+      
       chooseTarget = false;
     }
-}
-
-function getLatLong(lat, lng) {
-  let url = "http://localhost:8000/closestNode?lat=" + lat + "&lng=" + lng;
-
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open( "GET", url, false ); // false for synchronous request
-  xmlHttp.send( null );
-  return xmlHttp.responseText;
-}
-
-map.on("click", onMapClick);
-
-function setSource() {
-  chooseSource = true;
-}
-
-function setTarget() {
-  chooseTarget = true;
-}
-
-function dijkstra() {
-  if(source.id != null && target.id != null) {
-    let url = "http://localhost:8000/dijkstra?start=" + source.id + "&end=" + target.id;
+  }
   
+  function getLatLong(lat, lng) {
+    let url = "http://localhost:8000/closestNode?lat=" + lat + "&lng=" + lng;
+    
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", url, false ); // false for synchronous request
     xmlHttp.send( null );
-
-    path = L.geoJSON(JSON.parse(xmlHttp.responseText));
-    path.addTo(map);
-  } else {
-    alert("Choose your start and end node");
+    return xmlHttp.responseText;
   }
-}
+  
+  map.on("click", onMapClick);
+  
+  function setSource() {
+    chooseSource = true;
+  }
+  
+  function setTarget() {
+    chooseTarget = true;
+  }
+  
+  function dijkstra() {
+    if(source.id != null && target.id != null) {
+      let url = "http://localhost:8000/dijkstra?start=" + source.id + "&end=" + target.id;
+      
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open( "GET", url, false ); // false for synchronous request
+      xmlHttp.send( null );
+      
+      if(path != null) {
+        map.removeLayer(path);
+      }
+      path = L.geoJSON(JSON.parse(xmlHttp.responseText)).addTo(map);
 
-function clear() {
-  source.id = null;
-  source.lat = null;
-  source.lng = null;
+    } else {
+      alert("Choose your start and end node");
+    }
+  }
+  
+  function clean() {
+    console.log(source.id + " ." + source.lat + " ." + 
+    source.lng);
 
-  target.id = null;
-  target.lat = null;
-  target.lng = null;
+    console.log(target.id + " ." + target.lat + " ." + 
+    target.lng);
 
-  map.removeLayer(path);
+    source.id = null;
+    source.lat = null;
+    source.lng = null;
+    
+    target.id = null;
+    target.lat = null;
+    target.lng = null;
+    
+    if(path != null) {
+      map.removeLayer(path);
+    }
 
+    $("#trgNode").text("");
+    $("#srcNode").text("");
 }
