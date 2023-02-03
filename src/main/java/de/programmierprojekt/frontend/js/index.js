@@ -27,10 +27,13 @@ function onMapClick(e) {
     if(chooseSource) {
       let result = getLatLong(e.latlng.lat, e.latlng.lng).split("+");
       
-      
       const nodeID = result[0];
       const lat = result[1];
       const lng = result[2];
+
+      source.id = nodeID;
+      source.lat = lat;
+      source.lng = lng;
       
       $("#srcNode").text("lat: " + lat + " lng:" + lng + " (" + nodeID + ")");
       
@@ -43,6 +46,10 @@ function onMapClick(e) {
       const lat = result[1];
       const lng = result[2];
       
+      target.id = nodeID;
+      target.lat = lat;
+      target.lng = lng;
+
       $("#trgNode").text("lat: " + lat + " lng:" + lng + " (" + nodeID + ")");
 
       chooseTarget = false;
@@ -55,7 +62,6 @@ function getLatLong(lat, lng) {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.open( "GET", url, false ); // false for synchronous request
   xmlHttp.send( null );
-  console.log(xmlHttp.responseText + "------");
   return xmlHttp.responseText;
 }
 
