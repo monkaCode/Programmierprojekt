@@ -3,6 +3,7 @@ package de.programmierprojekt;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
+import de.programmierprojekt.backend.Dijkstra;
 import de.programmierprojekt.backend.Graph;
 
 import java.io.IOException;
@@ -128,8 +129,31 @@ public class Server {
     }
 
     private static void handleRequestDijkstra(HttpExchange exchange) throws IOException {
-        // TODO
+        String query = exchange.getRequestURI().getQuery();
+        Scanner scanner = new Scanner(query).useDelimiter("&");
+        int startID = 0;
+        int endID = 0;
 
+        while (scanner.hasNext()) {
+            String[] pair = scanner.next().split("=");
+            if (pair[0].equals("start")) {
+                startID = Integer.parseInt(pair[1]);
+            }
+            if (pair[0].equals("end")) {
+                endID = Integer.parseInt(pair[1]);
+            }
+        }
+
+        Dijkstra dijkstra = new Dijkstra(startID);
+        dijkstra.oneToOneDijkstra(endID);
+
+        String response = dijkstra.pathToJSON(startID, endID);
+
+        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+        exchange.sendResponseHeaders(200, response.length());
+        OutputStream os = exchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
     }
 
 }

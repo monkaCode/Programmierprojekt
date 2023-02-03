@@ -16,6 +16,8 @@ public class Dijkstra {
     private int[] costs;
     private boolean[] visited;
 
+    private int[] prev;
+
     public Dijkstra(int srcNodeID) {
         prepareDijkstra(srcNodeID);
     }
@@ -39,6 +41,8 @@ public class Dijkstra {
             }
 
         });
+
+        prev = new int[Graph.getNumberOfNodes()];
 
         visited = new boolean[Graph.getNumberOfNodes()];
         Arrays.fill(visited, false);
@@ -121,8 +125,59 @@ public class Dijkstra {
                     int[] tmp = { targetNodeID, calcDistance };
                     queue.add(tmp);
 
+                    prev[targetNodeID] = minNodeID;
+
                 }
             }
         }
+    }
+
+    public String pathToJSON(int startID, int endID) {
+        String path = "";
+
+        int currentID = endID;
+
+        while (currentID != startID) {
+            path += "[" + Graph.getLongitude(currentID) + "," + Graph.getLatitude(currentID) + "],\n";
+            currentID = prev[currentID];
+        }
+
+        path += "[" + Graph.getLongitude(startID) + "," + Graph.getLatitude(startID) + "]\n";
+
+        path = "{\n"
+                + " \"type\": \"FeatureCollection\",\n"
+                + "  \"features\": [\n"
+                + "  {\"type\": \"Feature\",\n"
+                + "   \"geometry\": {\n"
+                + "    \"type\": \"LineString\",\n"
+                + "     \"coordinates\": [\n"
+                + path
+                + "    ]},\n"
+                + "    \"properties\": {\n"
+                + "    }\n  "
+                + "   },"
+                + "   {\n"
+                + "      \"type\": \"Feature\",\n"
+                + "       \"geometry\": {\n"
+                + "        \"type\": \"Point\",\n"
+                + "         \"coordinates\": [" + Graph.getLongitude(startID) + "," + Graph.getLatitude(startID) + "]\n"
+                + "           },\n"
+                + "           \"properties\": {\n"
+                + "               \"marker-symbol\": \"marker\"\n"
+                + "           }\n"
+                + "   },"
+                + "   {\n"
+                + "      \"type\": \"Feature\",\n"
+                + "       \"geometry\": {\n"
+                + "        \"type\": \"Point\",\n"
+                + "         \"coordinates\": [" + Graph.getLongitude(endID) + "," + Graph.getLatitude(endID) + "]\n"
+                + "           },\n"
+                + "           \"properties\": {\n"
+                + "               \"marker-symbol\": \"square\"\n"
+                + "           }\n"
+                + "       } "
+                + "  ]\n"
+                + "}";
+        return path;
     }
 }

@@ -1,10 +1,11 @@
 let map = L.map("map").setView([50.81, 10.21], 6);
 
-
 let source = {lat:null, lng:null, id:null};
 let target = {lat:null, lng:null, id:null};
 let chooseSource = false;
 let chooseTarget = false;
+
+let path;
 
 
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -76,6 +77,18 @@ function setTarget() {
 }
 
 function dijkstra() {
+  if(source.id != null && target.id != null) {
+    let url = "http://localhost:8000/dijkstra?start=" + source.id + "&end=" + target.id;
+  
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", url, false ); // false for synchronous request
+    xmlHttp.send( null );
+
+    path = L.geoJSON(JSON.parse(xmlHttp.responseText));
+    path.addTo(map);
+  } else {
+    alert("Choose your start and end node");
+  }
 }
 
 function clear() {
@@ -86,5 +99,7 @@ function clear() {
   target.id = null;
   target.lat = null;
   target.lng = null;
+
+  map.removeLayer(path);
 
 }
