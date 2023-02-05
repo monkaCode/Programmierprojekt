@@ -16,57 +16,54 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 let popup = L.popup();
 
-function onMapClick(e) {
+function onMapClick(e) {  
   popup
     .setLatLng(e.latlng)
     .setContent(
       "You clicked the map at " +
-        e.latlng.toString() 
+      "lat: " + e.latlng.lat +
+      " lng: " + e.latlng.lng
     )
     .openOn(map);
 
+    let result = getLatLong(e.latlng.lat, e.latlng.lng).split("+");
+    
+    const nodeID = result[0];
+    const lat = result[1];
+    const lng = result[2];
+
+    
     if(chooseSource) {
-      let result = getLatLong(e.latlng.lat, e.latlng.lng).split("+");
-      
-      const nodeID = result[0];
-      const lat = result[1];
-      const lng = result[2];
+      $("#srcNode").text("lat: " + lat + " lng: " + lng + " (" + nodeID + ")");
 
       source.id = nodeID;
       source.lat = lat;
       source.lng = lng;
       
-      $("#srcNode").text("lat: " + lat + " lng:" + lng + " (" + nodeID + ")");
-      
       chooseSource = false;
     } else if(chooseTarget) {
-      let result = getLatLong(e.latlng.lat, e.latlng.lng).split("+");
-      
-      
-      const nodeID = result[0];
-      const lat = result[1];
-      const lng = result[2];
+      $("#trgNode").text("lat: " + lat + " lng: " + lng + " (" + nodeID + ")");
       
       target.id = nodeID;
       target.lat = lat;
       target.lng = lng;
-
-      $("#trgNode").text("lat: " + lat + " lng:" + lng + " (" + nodeID + ")");
       
       chooseTarget = false;
     }
+    $("#closestNode").text("Closest node depending on the area clicked: " + "lat: " + lat + " lng: " + lng + " (" + nodeID + ")");
+    
   }
+
+  map.on("click", onMapClick);
   
   function getLatLong(lat, lng) {
     let url = "http://localhost:8000/closestNode?lat=" + lat + "&lng=" + lng;
     
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", url, false ); // false for synchronous request
+    xmlHttp.open( "GET", url, false ); 
     xmlHttp.send( null );
     return xmlHttp.responseText;
   }
-  
-  map.on("click", onMapClick);
   
   function setSource() {
     chooseSource = true;
@@ -90,7 +87,7 @@ function onMapClick(e) {
       path = L.geoJSON(JSON.parse(xmlHttp.responseText)).addTo(map);
 
     } else {
-      alert("Choose your start and end node");
+      alert("Choose your source and target node for the shortest Path");
     }
   }
   
@@ -109,4 +106,5 @@ function onMapClick(e) {
 
     $("#trgNode").text("");
     $("#srcNode").text("");
+    $("#closestNode").text("");
 }
