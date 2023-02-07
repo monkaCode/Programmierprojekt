@@ -1,7 +1,19 @@
-.submit-button {
-    width: 100px;
-    height: 23px;
-}
 #path {
-    width: 500px;
+    width: 700px;
+    height: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.submit-button {
+    padding: 8px 12px 8px 12px;
+}
+.info-text {
+    font-size: 22px;
+    padding-bottom: 5px;
 }

@@ -1,5 +1,6 @@
 function readPath() {
     let path = document.getElementById("path").value;
+    
     if(path == "") {
         alert("You must enter a path");
     } else {
