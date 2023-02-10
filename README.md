@@ -1,9 +1,13 @@
-# Programmierprojekt :)
+# Programmierprojekt [Basaer, Hutt, Volpe]
 
-# über commandline wie folgt (mit maven):
+## Ausführungsanleitung
 
-# mvn exec:java -Dexec.mainClass=de.programmierprojekt.Benchmark -Dexec.args="-graph /Users/mehmet/Desktop/Uni/Semester3/Webbasierter-Routenplaner/Programmierprojekt/DataSets/germany.fmi -lon 9.098 -lat 48.746 -que /Users/mehmet/Desktop/Uni/Semester3/Webbasierter-Routenplaner/Programmierprojekt/DataSets/germany.fmi -s 638394"
+Mit der Konsole den Ordner(Programmierprojekt_BasaerHuttVolpe) öffnen.
+Danach die JAR-File (im target-Ordner) ausführen mit folgendem Befehl (mit zusätzlichen Argumenten für Benchmark.java):
 
-# java -jar target/programmierprojekt-1.0-SNAPSHOT-with-dependencies.jar -graph /Users/mehmet/Desktop/Uni/Semester3/Webbasierter-Routenplaner/Programmierprojekt/DataSets/germany.fmi -lon 9.098 -lat 48.746 -que /Users/mehmet/Desktop/Uni/Semester3/Webbasierter-Routenplaner/Programmierprojekt/DataSets/germany.que -s 638394
+java -jar target/Server.jar
 
-# java -jar target\programmierprojekt-1.0-SNAPSHOT-jar-with-dependencies.jar -graph D:\Documents\Uni\Kurse\3.Semester\Programmierprojekt\programmierprojekt\DataSets\germany.fmi -lon 9.098 -lat 48.746 -que D:\Documents\Uni\Kurse\3.Semester\Programmierprojekt\programmierprojekt\Benchs\germany.que -s 638394
+## Anmerkung zur Webseite
+
+1. Man muss auf den Set Knopf drücken, erst dann wird der nächste Klick als Start/End Knoten wahrgenommen.
+2. Der Calc Knopf berechnet die Strecke zwischen Start- und Endknoten
