@@ -48,10 +48,9 @@ public class Server {
     private static void handleGetRequest(HttpExchange exchange, String fileType, String fileName) throws IOException {
 
         String response = new String(Files.readAllBytes(
-                Paths.get(
-                        "Programmierprojekt/src/main/java/de/programmierprojekt/frontend/" + fileType + "/"
+                Paths.get("src/main/java/de/programmierprojekt/frontend/" + fileType + "/"
                                 + fileName)));
-
+                            
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         exchange.sendResponseHeaders(200, response.getBytes().length);
 
@@ -128,6 +127,13 @@ public class Server {
 
     }
 
+    /**
+     * For given start and end nodeID from the Client 
+     * it calculates the shortes path and sends the result
+     * as geoJSON String
+     * @param exchange
+     * @throws IOException
+     */
     private static void handleRequestDijkstra(HttpExchange exchange) throws IOException {
         String query = exchange.getRequestURI().getQuery();
         Scanner scanner = new Scanner(query).useDelimiter("&");

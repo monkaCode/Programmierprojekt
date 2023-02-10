@@ -45,7 +45,7 @@
       <configuration>
         <archive>
           <manifest>
-            <mainClass>de.programmierprojekt.Benchmark</mainClass>
+            <mainClass>de.programmierprojekt.Server</mainClass>
           </manifest>
         </archive>
         <descriptorRefs>
